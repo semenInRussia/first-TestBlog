@@ -1,0 +1,21 @@
+{% extends "layaut.html" %}
+
+{% block title %}{{article.name}}{% endblock  %}
+
+{% block content %}
+    <div class="alert alert-{{article.color}} mheader" role="alert">
+        </small>
+            <h4 class="alert-heading">{{ article.name }}</h4>
+            <p>{{ article.tag }}</p>
+        </small>
+        <hr>
+        {{ article.text }}
+        <hr>
+        Автор: {{article.author.username}}
+        </div>
+{% endblock %}
+
+{% block admin %}
+    <a href="{% url 'main:delete' slug=article.slug %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'main:update' slug=article.slug %}" class="btn btn-info">Update</a>
+{% endblock admin %}

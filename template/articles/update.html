@@ -1,0 +1,22 @@
+{% extends "layaut.html" %}
+
+{% block title %}Изменение статьи {{model.name}}{% endblock %}
+
+{% block content %}
+    <form class='mheader' method='post' action='{% url "main:update" slug=model.slug %}'>
+    {% csrf_token %}
+    <div class="form-group">
+        {% for fields in form  %}
+            {% if fields.error %}
+                <div class="aler alert-warning">
+                    {{fields.error}}
+                </div>
+            {% endif %}
+
+            {{ fields.label }}
+            {{ fields }}
+        {% endfor %}
+        <button class="btn btn-outline-danger" type='submit'>Изменить</button>
+    </div>
+</form>
+{% endblock %}

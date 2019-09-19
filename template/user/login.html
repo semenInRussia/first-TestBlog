@@ -1,0 +1,27 @@
+{% extends "layaut.html" %}
+
+{% block title %}Вход{% endblock title %}
+
+{% block content %}
+    <form action="{% url 'main:login' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group mheader">
+
+            {% for field in form  %}
+                {% if field.errors %}
+                    <div class="alert alert-danger">
+                        {{field.errors}}
+                    </div>
+                {% endif %}
+                
+                {{field.label}}
+                {{field}}
+            {% endfor %}
+            <br>
+            <button type="submit" class="btn btn-info">Войти</button>
+            <a href="{% url 'main:registr' %}" class="btn btn-danger">
+                Зарегистрироваться
+            </a>
+        </div>
+    </form>
+{% endblock content %}

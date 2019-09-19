@@ -1,0 +1,20 @@
+{% extends "layaut.html" %}
+
+{% block title %}Статьи{% endblock %}
+
+{% block content %}
+    {% for i in articles %}
+
+        <div class="alert alert-{{i.color}} mheader" role="alert">
+                <h4>
+                    <a href='{% url "main:detail" i.slug %}' class="alert-link">
+                        {{i.name}}
+                    </a>
+                </h4>
+                    Автор: {{i.author.username}}
+                <p>{{i.tag}}</p>
+            {{i.date}}
+        </div>
+        
+    {% endfor %}
+{% endblock %}

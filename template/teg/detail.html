@@ -1,0 +1,16 @@
+{% extends "layaut.html" %}
+
+{% block title %}{{tag.name}}{% endblock title %}
+
+{% block content %}
+    <div class="alert alert-light mheader">
+        {{tag.name}}
+        <hr>
+        Число просмотров:  {{num_use}}
+    </div>
+{% endblock content %}
+
+{% block admin %}
+  <a href="{% url 'main:tag_delete' slug=tag.slug %}" class="btn btn-danger">Delete</a>
+  <a href="{% url 'main:tag_update' slug=tag.slug %}" class="btn btn-info">Update</a>
+{% endblock admin %}

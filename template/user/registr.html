@@ -1,0 +1,25 @@
+{% extends "layaut.html" %}
+
+{% block title %}Регистрация{% endblock title %}
+
+{% block content %}
+    <form action="{% url 'main:registr' %}" method="POST"class='mheader' >
+        {% csrf_token %}
+        <div class="form-group">
+            {% for field in form  %}
+
+                {% if field.errors %}
+                    {{field.errors}}
+                {% endif %}
+
+                {{field.label}}
+                {{field}}
+
+            {% endfor %}
+
+            <br>
+            <input type="submit" value="Зарегистрироваться" class="btn btn-danger">
+            <a href="{% url 'main:login' %}" class="btn btn-info">Войти</a>
+        </div>
+    </form>
+{% endblock content %}  

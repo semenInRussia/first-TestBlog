@@ -1,0 +1,26 @@
+{% extends "layaut.html" %}
+
+{% block title %}Создание тега{% endblock %}
+
+{% block content %}
+
+<form class='mheader' method='post' action='{% url "main:createtag" %}'>
+    {% csrf_token %}
+    <div class="form-group">
+        {% for fields in form  %}
+        
+            {% if fields.errors %}
+                <br>
+                <div class="aler alert-warning">
+                    {{fields.errors}}
+                </div>
+            {% endif%}
+            
+            {{ fields.label }}
+            {{ fields }}
+        {% endfor %}
+        <br>
+        <button class="btn btn-outline-danger" type='submit'>Создать</button>
+    </div>
+</form>
+{% endblock %}
