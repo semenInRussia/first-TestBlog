@@ -7,6 +7,8 @@ from .models import MyArticles
 from .models import Tag
 from django.contrib.auth.models import User
 
+from django.template.loader import render_to_string
+
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
@@ -25,6 +27,10 @@ from django.utils.text import slugify
 from time import time
 
 from django.views import View 
+
+from django.db.models import Q
+
+from django.http import HttpResponse
 
 
 # Create your views here.
@@ -150,7 +156,7 @@ def delete(request, slug):
 def tag_index(request):
     list_tags = Tag.objects.all()
     return render(request, 'teg\\index.html', context={
-        'list': list_tags,
+        'list': sorted(list_tags.__iter__(), key=(lambda a: 100000-len(MyArticles.objects.filter(tag=a)))),
         'is_list_tag': True,
     })
 def tag_detail(request, slug):
@@ -161,6 +167,7 @@ def tag_detail(request, slug):
         'tag': obj,
         'model':obj,
         'num_use': len(list_articles),
+        "usl":request.user.pk==obj.author.pk,
     })
 class tag_create(View):
     def get(self, request):
@@ -170,7 +177,7 @@ class tag_create(View):
         })
     def post(self, request):
         data_form_tag = {
-            'name': request.POST.get('name'),
+            'name': request.POST.get('name', '').title(),
             'slug': get_slug(request.POST.get('name')),
             'author': request.user,
         }
@@ -220,14 +227,14 @@ def tag_delete(request, slug):
 class registruser(View):
     d = User()
     def get(self, request):
-        form = UserCreationForm()
+        form = UserForm()
         return render(
             request, 'user\\registr.html',context={
                 'form': form,
             }
         )
     def post(self, request):
-        form = UserCreationForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
             new_user = form.save()
             login(request, new_user)
@@ -276,3 +283,34 @@ def lagaut(request, username):
     obj = User.objects.get(username=username)
     logout(request)
     return redirect(reverse('main:index'))
+def searchtag(request):
+    text_user = request.GET.get('text')
+    list_tags = Tag.objects.filter(name__icontains=text_user.title())
+    str_template = ''''''
+    for tag in list_tags:
+        str_template += f"""
+            <div class="alert alert-light">
+              <a href='{reverse('main:detail',kwargs={'slug':tag.slug})}' class="alert-link">{tag.name}</a>
+            </div>
+        """
+    return HttpResponse(str_template)
+    
+def articleget(request):
+    text_user = request.GET.get('text')
+    list_articles = MyArticles.objects.filter(
+        Q(name__icontains=text_user.lower())|Q(text__icontains=text_user.lower()))
+    str_template = ''''''
+    for article in list_articles:
+        str_template += f"""
+        <div class="alert alert-{article.color}" role="alert">
+                <h4>
+                    <a href='{reverse('main:detail', kwargs={'slug': article.slug})}' class="alert-link">
+                        {article.name}
+                    </a>
+                </h4>
+                    Автор: {article.author.username}
+                <p>{article.tag}</p>
+        </div>
+        """
+    return HttpResponse(str_template)
+    

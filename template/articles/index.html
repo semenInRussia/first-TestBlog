@@ -5,7 +5,7 @@
 {% block content %}
     {% for i in articles %}
 
-        <div class="alert alert-{{i.color}} mheader" role="alert">
+        <div class="alert alert-{{i.color}}" role="alert">
                 <h4>
                     <a href='{% url "main:detail" i.slug %}' class="alert-link">
                         {{i.name}}

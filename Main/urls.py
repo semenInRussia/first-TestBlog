@@ -25,4 +25,7 @@ urlpatterns = [
     path('registration/', views.registruser.as_view(), name='registr'),
     path('login/', views.userlogin.as_view(), name='login'),
     path('kabinet/<path:username>/', views.kabinet, name='kabinet'),
+
+    path('searctag/', views.searchtag, name='searchtag'),
+    path('searcharticle/', views.articleget, name='searcharticle'),
 ]

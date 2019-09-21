@@ -3,11 +3,9 @@
 {% block title %}Теги{% endblock title %}
 
 {% block content %}
-  <div class="mheader">
       {% for tag in list  %}
           <div class="alert alert-light">
               <a href='{% url "main:tag_detail" slug=tag.slug %}' class="alert-link">{{tag}}</a>
           </div>
       {% endfor %}
-  </div>
 {% endblock content %}

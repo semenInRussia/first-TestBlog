@@ -3,7 +3,7 @@
 {% block title %}Изменение тега {{model.name}}{% endblock %}
 
 {% block content %}
-    <form class='mheader' method='post' action='{% url "main:tag_update" model.slug %}'>
+    <form method='post' action='{% url "main:tag_update" model.slug %}'>
     {% csrf_token %}
     <div class="form-group">
         {% for fields in form  %}

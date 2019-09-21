@@ -5,7 +5,7 @@
 {% block content %}
     <form action="{% url 'main:login' %}" method="POST">
         {% csrf_token %}
-        <div class="form-group mheader">
+        <div class="form-group">
 
             {% for field in form  %}
                 {% if field.errors %}

@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<form class='mheader' method='post' action='{% url "main:createtag" %}'>
+<form method='post' action='{% url "main:createtag" %}'>
     {% csrf_token %}
     <div class="form-group">
         {% for fields in form  %}

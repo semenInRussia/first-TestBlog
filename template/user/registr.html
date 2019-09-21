@@ -3,7 +3,7 @@
 {% block title %}Регистрация{% endblock title %}
 
 {% block content %}
-    <form action="{% url 'main:registr' %}" method="POST"class='mheader' >
+    <form action="{% url 'main:registr' %}" method="POST" >
         {% csrf_token %}
         <div class="form-group">
             {% for field in form  %}
