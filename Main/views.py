@@ -31,6 +31,7 @@ from django.views import View
 from django.db.models import Q
 
 from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 
 
 # Create your views here.
@@ -117,6 +118,10 @@ def post_create(request):
 class update(View):
     def get(self, request, slug):
         obj = MyArticles.objects.get(slug=slug)
+
+        condition = obj.author.pk==request.user.pk
+        if not request.user.is_staff or not condition:
+            raise PermissionDenied
         form = ArticleForm(instance=obj)
         return render(request, 'articles\\update.html', context={
             'form':form,
@@ -124,7 +129,9 @@ class update(View):
         })
     def post(self, request, slug):
         obj = MyArticles.objects.get(slug=slug)
-        
+        condition = obj.author.pk==request.user.pk
+        if not request.user.is_staff or not condition:
+            raise PermissionDenied       
         d = {'slug':get_slug(request.POST.get('name')),
             'name':request.POST.get('name'),
             'tag':request.POST.get('tag'),
@@ -151,6 +158,9 @@ class update(View):
 
 def delete(request, slug):
     ob = MyArticles.objects.get(slug=slug)
+    condition = ob.author.pk==request.user.pk
+    if not request.user.is_staff or  not condition:
+        raise PermissionDenied
     ob.delete()
     return redirect(reverse('main:articles'))
 def tag_index(request):
@@ -192,16 +202,20 @@ class tag_create(View):
         })
 class tag_update(View):
     def get(self, request, slug):
-        print(slug)
         obj = Tag.objects.get(slug=slug)
+        condition = obj.author.pk==request.user.pk
+        if not request.user.is_staff or not condition:
+            raise PermissionDenied       
         form = TagForm(instance=obj)
         return render(request, 'teg\\update.html', context={
             'form':form,
             'model':obj,
         })
     def post(self, request, slug):
-        print(slug)
         obj = Tag.objects.get(slug=slug)
+        condition = obj.author.pk==request.user.pk
+        if not request.user.is_staff or not condition:
+            raise PermissionDenied       
         
         d = {
             'slug':get_slug(request.POST.get('name')),
@@ -221,6 +235,9 @@ class tag_update(View):
         })
 def tag_delete(request, slug):
     obj = Tag.objects.get(slug=slug)
+    condition = obj.author.pk==request.user.pk
+    if not request.user.is_staff or condition:
+        raise PermissionDenied
     obj.delete()
     return redirect(reverse('main:tags'))
 
