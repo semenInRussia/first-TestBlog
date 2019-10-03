@@ -25,27 +25,3 @@
     opacity: 0.5;
     background: #fff;
 }
-.admin-panel:hover{
-    opacity: 1;
-}
-.admin-panel a{
-    display: block;
-    margin: 5px;
-}
-
-.admin-panel button{
-    display: block;
-    margin-left: 5px;
-}
-
-.left{
-    position: absolute;
-    margin-top: 5px;
-    right: 0px;
-}
-
-.grid-only{
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-gap: 10px;
-}

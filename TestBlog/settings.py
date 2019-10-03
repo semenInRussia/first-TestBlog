@@ -44,7 +44,7 @@ ROOT_URLCONF = 'TestBlog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:\\Users\\Asus\\VSproject\\PYTHON\\DJANGO\\TestBlog\\template'],
+        'DIRS': [os.path.join(BASE_DIR, 'template')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

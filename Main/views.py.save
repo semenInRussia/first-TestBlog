@@ -13,9 +13,9 @@ from django.template.loader import render_to_string
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 
-from django.contrib.auth import login
-from django.contrib.auth import authenticate
-from django.contrib.auth import logout
+from django.contrib.auth import login 
+from django.contrib.auth import authenticate 
+from django.contrib.auth import logout 
 
 from .forms import ArticleForm
 from .forms import TagForm
@@ -27,7 +27,7 @@ from pprint import pprint
 from django.utils.text import slugify
 from time import time
 
-from django.views import View
+from django.views import View 
 
 from django.db.models import Q
 
@@ -36,20 +36,6 @@ from django.core.exceptions import PermissionDenied
 
 
 # Create your views here.
-class createcomment(View):
-    def get(self, request, slug):
-        pass
-    def post(self, request, slug):
-        article = MyArticles.objects.get(
-            slug=slug,
-        )
-        if request.POST.get('commentbody'):
-            Coments.objects.create(
-                article=article,
-                author=request.user,
-                text=request.POST.get('commentbody')
-            )
-        return redirect(reverse('main:detail', kwargs={'slug':slug}))       
 def get_slug(w):
     if not isinstance(w, str):
         return None
@@ -69,26 +55,32 @@ def get_slug(w):
             res += i
     return slugify(res)
 def index(request):
-    return render(request, 'main/index.html')
+    return render(request, 'main\\index.html',context={
+        'detail': False
+    })
 
 def contacts(request):
-    return render(request, 'main/contacts.html')
+    return render(request, 'main\\contacts.html',context={
+        'detail': False
+    })
 
 def articles(request):
     listarticles = MyArticles.objects.all()
-    return render(request, 'articles/index.html', context={
+    return render(request, 'articles\\index.html', context={
         'articles':listarticles,
+        'detail': False,
         'is_list':True,
     })
 def detail(request, slug):
     print(slug)
     ob = MyArticles.objects.get(slug=slug)
-    return render(request, 'articles/detail.html',context={
+    return render(request, 'articles\\detail.html',context={
         'article':ob,
         'coments': Coments.objects.filter(article=ob),
         'model': ob,
         "usl":ob.author.pk==request.user.pk,
         'is_articles':True,
+        'boo': 'article',
     })
 
 def post_create(request):
@@ -102,7 +94,7 @@ def post_create(request):
             'color': request.POST.get('color'),
     }
 
-
+    
     boundform = ArticleForm(d)
     if boundform.is_valid():
         new_post = boundform.cleaned_data
@@ -118,10 +110,10 @@ def post_create(request):
         ma.save()
         return redirect(reverse('main:detail', kwargs={'slug':nd['slug']}))
     if request.POST:
-        return render(request, 'articles/createpage.html', context={
+        return render(request, 'articles\\createpage.html', context={
             'form': ArticleForm(d)
         })
-    return render(request, 'articles/createpage.html', context={
+    return render(request, 'articles\\createpage.html', context={
             'form': ArticleForm()
         })
 
@@ -133,7 +125,7 @@ class update(View):
         if not request.user.is_staff or not condition:
             raise PermissionDenied
         form = ArticleForm(instance=obj)
-        return render(request, 'articles/update.html', context={
+        return render(request, 'articles\\update.html', context={
             'form':form,
             'model':obj,
         })
@@ -141,7 +133,7 @@ class update(View):
         obj = MyArticles.objects.get(slug=slug)
         condition = obj.author.pk==request.user.pk
         if not request.user.is_staff or not condition:
-            raise PermissionDenied
+            raise PermissionDenied       
         d = {'slug':get_slug(request.POST.get('name')),
             'name':request.POST.get('name'),
             'tag':request.POST.get('tag'),
@@ -160,14 +152,11 @@ class update(View):
                 'data': obj.data,
             }
             new_post = bform.save()
-            return redirect(reverse("main:detail",kwargs={
-		'slug':new_post.slug
-	    }))
-        return render(request, 'articles/update.html', context={
+            # return redirect(new_post)
+        return render(request, 'articles\\update.html', context={
             'form': bform,
             'model': obj,
         })
-    
 
 def delete(request, slug):
     ob = MyArticles.objects.get(slug=slug)
@@ -178,7 +167,7 @@ def delete(request, slug):
     return redirect(reverse('main:articles'))
 def tag_index(request):
     list_tags = Tag.objects.all()
-    return render(request, 'teg/index.html', context={
+    return render(request, 'teg\\index.html', context={
         'list': sorted(list_tags.__iter__(), key=(lambda a: 100000-len(MyArticles.objects.filter(tag=a)))),
         'is_list_tag': True,
     })
@@ -186,7 +175,7 @@ def tag_detail(request, slug):
     print(slug)
     obj = Tag.objects.get(slug=slug)
     list_articles = MyArticles.objects.filter(tag=obj)
-    return render(request, 'teg/detail.html', context={
+    return render(request, 'teg\\detail.html', context={
         'tag': obj,
         'model':obj,
         'num_use': len(list_articles),
@@ -195,7 +184,7 @@ def tag_detail(request, slug):
 class tag_create(View):
     def get(self, request):
         form = TagForm()
-        return render(request, 'teg/createpage.html', context={
+        return render(request, 'teg\\createpage.html', context={
             'form': form,
         })
     def post(self, request):
@@ -210,7 +199,7 @@ class tag_create(View):
             return redirect(reverse('main:tag_detail', kwargs={
                 'slug': get_slug(request.POST['name'])
             }))
-        return render(request, 'teg/createpage.html', context={
+        return render(request, 'teg\\createpage.html', context={
             'form': bform,
         })
 class tag_update(View):
@@ -218,9 +207,9 @@ class tag_update(View):
         obj = Tag.objects.get(slug=slug)
         condition = obj.author.pk==request.user.pk
         if not request.user.is_staff or not condition:
-            raise PermissionDenied
+            raise PermissionDenied       
         form = TagForm(instance=obj)
-        return render(request, 'teg/update.html', context={
+        return render(request, 'teg\\update.html', context={
             'form':form,
             'model':obj,
         })
@@ -228,7 +217,8 @@ class tag_update(View):
         obj = Tag.objects.get(slug=slug)
         condition = obj.author.pk==request.user.pk
         if not request.user.is_staff or not condition:
-            raise PermissionDenied
+            raise PermissionDenied       
+        
         d = {
             'slug':get_slug(request.POST.get('name')),
             'name':request.POST.get('name'),
@@ -241,7 +231,7 @@ class tag_update(View):
             }
             new_post = bform.save()
             return redirect(reverse('main:tag_detail',kwargs={'slug':new_post.slug}))
-        return render(request, 'teg/update.html', context={
+        return render(request, 'teg\\update.html', context={
             'form': bform,
             'model': obj,
         })
@@ -258,7 +248,7 @@ class registruser(View):
     def get(self, request):
         form = UserForm()
         return render(
-            request, 'user/registr.html',context={
+            request, 'user\\registr.html',context={
                 'form': form,
             }
         )
@@ -268,7 +258,7 @@ class registruser(View):
             new_user = form.save()
             login(request, new_user)
         return render(
-            request, 'user/registr.html',context={
+            request, 'user\\registr.html',context={
                 'form': form,
             }
         )
@@ -276,7 +266,7 @@ class registruser(View):
 class userlogin(View):
     def get(self, request):
         form = LoginUserForm()
-        return render(request, 'user/login.html',context={
+        return render(request, 'user\\login.html',context={
             'form': form,
         })
     def post(self, request):
@@ -293,8 +283,8 @@ class userlogin(View):
                     'username': username
                 }
             ))
-
-        return render(request, 'user/login.html', context={
+ 
+        return render(request, 'user\\login.html', context={
                 'form': form,
             })
 def kabinet(request, username):
@@ -303,7 +293,7 @@ def kabinet(request, username):
         MyArticles.objects.filter(author=user).__iter__(),
         Tag.objects.filter(author=user).__iter__(),
     )
-    return render(request, 'user/kabinet.html', context={
+    return render(request, 'user\\kabinet.html', context={
         'user': user,
         'list_tag': Tag.objects.filter(author=user),
         'list_myarticles': MyArticles.objects.filter(author=user),
@@ -323,7 +313,7 @@ def searchtag(request):
             </div>
         """
     return HttpResponse(str_template)
-
+    
 def articleget(request):
     text_user = request.GET.get('text')
     list_articles = MyArticles.objects.filter(
@@ -342,4 +332,3 @@ def articleget(request):
         </div>
         """
     return HttpResponse(str_template)
-    

@@ -13,6 +13,21 @@
         <hr>
         Автор: {{article.author.username}}
         </div>
+    {% if request.user.is_authenticated %}
+    <form method='post' action='{% url "main:createcomment" slug=model.slug %}'>
+	{% csrf_token %}
+      	<input type="text" name="commentbody" class="form-control">
+        <input type='submit' class='btn btn-info' value='Написать комментарий'>
+    </form>
+    {% endif %}
+    {% for coment in coments  %}
+        <hr>
+        <div class="alert alert-{{article.color}}" style="width:500px;">
+            <h6 class="alert-heding">{{coment.author.username}}</h6>
+            <hr>
+            {{coment.text}}
+        </div>
+    {% endfor %}
 {% endblock %}
 
 {% block admin %}

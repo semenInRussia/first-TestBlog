@@ -35,3 +35,10 @@ function articleget(url){
         }
         });
 };
+function view(){
+    var but = $('#clicread'),
+        div = but.parent();
+    div.css({
+        overflow:,
+    })
+}

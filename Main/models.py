@@ -2,6 +2,17 @@ from django.db import models
 
 from django.shortcuts import reverse
 # # Create your models here.
+class Coments(models.Model):
+    text = models.TextField("Текст")
+    author = models.ForeignKey('auth.User', models.CASCADE)
+    article = models.ForeignKey('MyArticles', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.author.username}-{self.article.name}'
+    
+    class Meta:
+        verbose_name = 'Коментарий'
+        verbose_name_plural = 'Коментарии'
 class Tag(models.Model):
     name = models.CharField('Название', max_length=30, unique=True)
     slug = models.SlugField('URL', unique=True)
