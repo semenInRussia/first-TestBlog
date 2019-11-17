@@ -128,10 +128,15 @@ def post_create(request):
 class update(View):
     def get(self, request, slug):
         obj = MyArticles.objects.get(slug=slug)
-
-        condition = obj.author.pk==request.user.pk
-        if not request.user.is_staff or not condition:
+        condition2 = not request.user.is_staff
+        condition = not obj.author.pk==request.user.pk
+        print(condition) 
+        print(condition2) 
+        if  condition2 and condition:
             raise PermissionDenied
+        
+        
+        
         form = ArticleForm(instance=obj)
         return render(request, 'articles/update.html', context={
             'form':form,
@@ -139,8 +144,9 @@ class update(View):
         })
     def post(self, request, slug):
         obj = MyArticles.objects.get(slug=slug)
-        condition = obj.author.pk==request.user.pk
-        if not request.user.is_staff or not condition:
+        condition2 = not request.user.is_staff
+        condition = not obj.author.pk==request.user.pk
+        if  condition2 and  condition:
             raise PermissionDenied
         d = {'slug':get_slug(request.POST.get('name')),
             'name':request.POST.get('name'),
@@ -171,8 +177,9 @@ class update(View):
 
 def delete(request, slug):
     ob = MyArticles.objects.get(slug=slug)
-    condition = ob.author.pk==request.user.pk
-    if not request.user.is_staff or  not condition:
+    condition = not ob.author.pk==request.user.pk
+    condition2 = not request.user.is_staff
+    if condition2 and condition:
         raise PermissionDenied
     ob.delete()
     return redirect(reverse('main:articles'))
@@ -254,7 +261,6 @@ def tag_delete(request, slug):
     return redirect(reverse('main:tags'))
 
 class registruser(View):
-    d = User()
     def get(self, request):
         form = UserForm()
         return render(
@@ -265,7 +271,10 @@ class registruser(View):
     def post(self, request):
         form = UserForm(request.POST)
         if form.is_valid():
-            new_user = form.save()
+            new_user = User.objects.create_user(request.POST.get("username"),
+                    request.POST.get("email"),
+                    request.POST.get("password"))
+            print(dir(new_user))
             login(request, new_user)
         return render(
             request, 'user/registr.html',context={
@@ -281,8 +290,9 @@ class userlogin(View):
         })
     def post(self, request):
         form = LoginUserForm(request.POST)
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
         user = authenticate(username=username, password=password)
 
         if user is not None:

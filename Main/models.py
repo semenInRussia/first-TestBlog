@@ -1,4 +1,5 @@
 from django.db import models
+from markdown import markdown
 
 from django.shortcuts import reverse
 # # Create your models here.
@@ -39,6 +40,7 @@ class MyArticles(models.Model):
     author = models.ForeignKey('auth.User', on_delete = models.CASCADE,)
     text = models.TextField('Tекст',)
     slug = models.SlugField(verbose_name='URL', max_length=50,)
+    html_text = models.TextField(editable=False)
     data = models.DateTimeField('Дата', auto_now_add=True,)
     color = models.CharField('Цвет',max_length=10, choices=colors.items(), default='green')
     tag = models.ForeignKey(Tag, on_delete = models.CASCADE,verbose_name='тег',blank=True)
@@ -53,3 +55,6 @@ class MyArticles(models.Model):
         ordering = ["-name"]
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
+    def save(self):
+        self.html_text = markdown(self.text)
+        super(MyArticles, self).save()

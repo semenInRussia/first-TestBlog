@@ -4,13 +4,12 @@
 
 {% block content %}
     <div class="alert alert-{{article.color}}" role="alert">
+
+
         </small>
-            <h4 class="alert-heading">{{ article.name }}</h4>
-            <p>{{ article.tag }}</p>
-        </small>
-        <hr>
-        {{ article.text }}
-        <hr>
+        <h4 class="alert-heading">
+                {{ article.name }}</h4> <p>{{ article.tag }}</p> </small> <hr>
+{{ article.html_text | safe}} <hr>
         Автор: {{article.author.username}}
         </div>
     {% if request.user.is_authenticated %}
@@ -19,6 +18,8 @@
       	<input type="text" name="commentbody" class="form-control">
         <input type='submit' class='btn btn-info' value='Написать комментарий'>
     </form>
+    {% else %}
+    <a class="btn btn-info" href="{% url "main:login"%}">Войти</a>
     {% endif %}
     {% for coment in coments  %}
         <hr>
@@ -27,6 +28,7 @@
             <hr>
             {{coment.text}}
         </div>
+        
     {% endfor %}
 {% endblock %}
 

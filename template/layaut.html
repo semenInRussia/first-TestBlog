@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,13 +54,13 @@
           {% if is_list %}
             <form class="form-inline my-2 my-lg-0" action="{% url 'main:searcharticle' %}">
               <input class="form-control mr-sm-2" oninput='articleget("{% url 'main:searcharticle' %}")' type="search"  id='articleinput' name='text' placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              <button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>
             </form>
           {% endif %}
           {% if is_list_tag %}
           <form class="form-inline my-2 my-lg-0" action="{% url 'main:searchtag' %}">
             <input class="form-control mr-sm-2" name='text' oninput="tagget('{% url 'main:searchtag' %}')" id='taginput' type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>
           </form>
           {% endif %}
         </div>

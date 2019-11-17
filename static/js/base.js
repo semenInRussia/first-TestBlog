@@ -1,4 +1,3 @@
-
 function tagget(url){
     var val = $('#taginput').val();
     var data = {
@@ -17,6 +16,7 @@ function tagget(url){
         }
         });
 };
+
 function articleget(url){
     var val = $('#articleinput').val();
     var data = {
